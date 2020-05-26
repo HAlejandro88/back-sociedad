@@ -7,8 +7,6 @@ const express = require('express'),
 
 app.get('/', (req,res) => {
     Empresa.find()
-           .populate('usuario', 'nombre')
-           .populate('ubicacion')
            .exec((err, empresas) => {
         if (err) {
             res.status(500).json({

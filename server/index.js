@@ -3,15 +3,20 @@ require('./config/config');
 const express = require('express'),
       bodyParser = require('body-parser'),
       mongoose = require('mongoose'),
+      multer = require('multer'),
+      morgan = require('morgan'),
       loginRoutes = require('../routes/login'),
       authRoutes = require('../routes/auth'),
-      Empresas = require('../routes/empresa'),
-      ubicacion = require('../routes/ubicacion'),
-      usuario = require('../routes/usuario'),
-      Responsable = require('../routes/responsable'),
-      equipos = require('../routes/equipos'),
+      empresaRoutes = require('../routes/empresa'),
+      usuarioRoutes = require('../routes/usuario'),
+      equiposRoutes = require('../routes/equipos'),
+      archivoRoutes = require('../routes/archivo'),
+      uuid = require('uuid/v4'),
+      path = require('path'),
       app = express(),
       cors = require('cors');
+
+
 
 
 mongoose.connect("mongodb://localhost:27017/metrol", {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}).then(() => {
@@ -23,23 +28,29 @@ app.use(cors({origin: true, credentials: true}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+app.use(morgan('dev'));
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, '../upload'),
+    filename: (req, file, cb, filename) => {
+        console.log(file);
+        cb(null, uuid() + path.extname(file.originalname));
+    }
+}) 
+app.use(multer({storage}).single('image'));
 
-app.use('/user',usuario);
+app.use('/user',usuarioRoutes);
 app.use('/user/login', loginRoutes);
 app.use('/user/auth', authRoutes);
-app.use('/ubicacion', ubicacion);
-app.use('/responsable', Responsable);
-app.use('/equipos', equipos);
-app.use('/empresas', Empresas);
+app.use('/equipos', equiposRoutes);
+app.use('/empresas', empresaRoutes);
+app.use('/archivo', archivoRoutes);
 
 app.get('/', (req,res) => {
     res.status(200).json({
         ok: true,
-        menssage: 'bienvenido a las apis de metrologia'
+        menssage: 'Bienvenido a las apis de Metrologia'
     })
-});
-
-
+})
 
 
 app.listen(process.env.PORT, 

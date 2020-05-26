@@ -8,11 +8,12 @@ const equipoSchema = new mongoose.Schema({
     },
     marca:{
         type: String,
-        required: [true, 'se necesita de una marca']
+        /* required: [true, 'se necesita de una marca'] */
     },
     modelo: {
         type: String,
-        required: [true, 'se requiere de un modelo'] 
+        /* required: [true, 'se requiere de un modelo']  */
+        required: false
     },
     numSerie: {
         type: String,
@@ -38,17 +39,22 @@ const equipoSchema = new mongoose.Schema({
     },
     descripcion: {
         type: String,
-        required: [true, 'se require de una descripcion']
-    },
-    certificado: {
-        type: String,
         required: false
     },
-
+    denominacion: {
+        type: String,
+        /* required: [true, 'se require de una denominacion'] */
+    },
     responsable: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'responsable'
-    }
+        type: String,
+        /* required: [true, 'se requiere responsable']  */
+    },
+    filename: { type: String },
+    path: { type: String },
+    originalname: { type: String },
+    archivo: { type: String },
+    mimetype: { type: String },
+    size: { type: Number },
 
 })
 
